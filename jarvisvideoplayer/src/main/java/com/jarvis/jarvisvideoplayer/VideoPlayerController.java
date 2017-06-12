@@ -9,6 +9,7 @@ import android.support.v4.view.MotionEventCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -29,6 +30,7 @@ import static android.R.attr.startX;
 import static android.content.Context.AUDIO_SERVICE;
 import static android.view.MotionEvent.ACTION_DOWN;
 import static android.view.MotionEvent.ACTION_MOVE;
+import static android.view.MotionEvent.ACTION_UP;
 import static com.jarvis.jarvisvideoplayer.VideoPlayer.PLAYER_FULL_SCREEN;
 import static com.jarvis.jarvisvideoplayer.VideoPlayer.PLAYER_NORMAL;
 import static com.jarvis.jarvisvideoplayer.VideoPlayer.PLAYER_TINY_WINDOW;
@@ -48,6 +50,7 @@ public class VideoPlayerController extends FrameLayout implements
         View.OnClickListener,
         SeekBar.OnSeekBarChangeListener {
 
+    public static final String TAG = "VideoPlayerController";
     private Context mContext;
     private IVideoPlayerControl mVideoPlayer;
 
@@ -100,6 +103,7 @@ public class VideoPlayerController extends FrameLayout implements
     private int mScreenHeight;
 
     private boolean topBottomVisible;
+    private boolean mTouchControlProgress = false;
     private Timer mUpdateProgressTimer;
     private TimerTask mUpdateProgressTimerTask;
     private CountDownTimer mDismissTopBottomCountDownTimer;
@@ -343,11 +347,19 @@ public class VideoPlayerController extends FrameLayout implements
                             float distanceY = mDownY - endY;
                             MoveOrientation orientation = getOrientation(distanceX, distanceY);
                             if (orientation == MoveOrientation.LEFT || orientation == MoveOrientation.RIGHT) {
-                                // X轴控制
-
+                                // X轴控制进度
+                                mTouchControlProgress = true;
+                                int position = mVideoPlayer.getCurrentPosition();
+                                int duration = mVideoPlayer.getDuation();
+                                int currentPosition = position - (int) distanceX * 10;
+                                int progress = (int) (100f * currentPosition / duration);
+                                mSeek.setProgress(progress);
+                                mPosition.setText(Utils.formatTime(position));
+                                mDuration.setText(Utils.formatTime(duration));
+                                Log.e(TAG, "ACTION_MOVE---------position: " + position + "-------currentPosition: " + currentPosition + "-----distanceX: " + distanceX);
                             } else {
                                 // Y轴控制
-                                if (endX > mScreenWidth / 2) {
+                                if (endX < mScreenWidth / 2) {
                                     // 右侧控制音量
                                     int touchRang = Math.min(mScreenWidth, mScreenHeight);
                                     int curvol = (int) (downVol + (distanceY / touchRang) * maxVoice);//考虑到横竖屏切换的问题
@@ -365,6 +377,20 @@ public class VideoPlayerController extends FrameLayout implements
                                     }
                                 }
                             }
+                            break;
+
+                        case ACTION_UP:
+                            if (mTouchControlProgress) {
+                                mTouchControlProgress = false;
+                                if (mVideoPlayer.isBufferingPaused() || mVideoPlayer.isPaused()) {
+                                    mVideoPlayer.restart();
+                                }
+                                int position = (int) (mVideoPlayer.getDuation() * mSeek.getProgress() / 100f);
+                                Log.e(TAG, "ACTION_UP-----------position: " + position);
+                                mVideoPlayer.seekTo(position);
+//                                startDismissTopBottomTimer();
+                            }
+
                             break;
                     }
 
@@ -541,6 +567,7 @@ public class VideoPlayerController extends FrameLayout implements
     }
 
     public MoveOrientation getOrientation(float dx, float dy) {
+        Log.e(TAG, "dx: " + dx + "------------ dy: " + dy);
         if (Math.abs(dx) > Math.abs(dy)){
             return dx > 0 ? MoveOrientation.LEFT : MoveOrientation.RIGHT;
         }else{
