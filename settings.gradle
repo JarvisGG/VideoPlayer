@@ -1,1 +1,1 @@
-include ':app', ':jarvisvideoplayer'
+include ':app', ':libs.videoplayer'
