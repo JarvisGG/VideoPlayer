@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.jarvis.videoplayer.R;
 import com.jarvis.videoplayer.adapter.HomeContainerAdapter;
+import com.jarvis.videoplayer.dialog.ChannelDialogFragment;
 import com.jarvis.videoplayer.view.HomeContainerView;
 import com.jarvis.videoplayer.view.TabView;
 
@@ -26,7 +27,7 @@ import java.util.List;
  * @changeRecord [修改记录] <br/>
  */
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements TabView.EditTabBar {
 
     private TabView mTabView;
     private HomeContainerView mHomeContainerView;
@@ -54,6 +55,7 @@ public class HomeFragment extends Fragment {
     private void initView(View containerView) {
         mTabView = (TabView) containerView.findViewById(R.id.home_tab_bar);
         mHomeContainerView = (HomeContainerView) containerView.findViewById(R.id.home_recyclerview);
+        mTabView.registerEditCallBack(this);
     }
 
     private void initData() {
@@ -79,5 +81,11 @@ public class HomeFragment extends Fragment {
         mHomeContainerView.setLayoutManager(mLinearLayoutManager);
         mHomeContainerView.setAdapter(mHomeContainerAdapter);
         mHomeContainerView.initOperator();
+    }
+
+    @Override
+    public void editTabBarCallback() {
+        ChannelDialogFragment dialogFragment = ChannelDialogFragment.newInstance();
+        dialogFragment.show(getActivity().getFragmentManager(), "CHANNEL");
     }
 }

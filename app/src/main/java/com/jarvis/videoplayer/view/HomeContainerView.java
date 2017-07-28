@@ -85,13 +85,11 @@ public class HomeContainerView extends RecyclerView {
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+
                     mSnapHelper.mNoNeedToScroll = mCurrentItemOffset == 0 || mCurrentItemOffset == getDestItemOffset(getAdapter().getItemCount() - 1);
                 } else {
                     mSnapHelper.mNoNeedToScroll = false;
                 }
-//                TabView.Router router = new TabView.Router();
-//                router.position = mCurrentItemPos;
-//                RxBus.getInstance().post(router);
             }
         });
         initWidth();
@@ -125,8 +123,10 @@ public class HomeContainerView extends RecyclerView {
                     @Override
                     public void accept(@NonNull Object o) throws Exception {
                         TabView.Router router = (TabView.Router) o;
-                        HomeContainerView.this.smoothScrollToPosition(
-                                router.position);
+                        if (router.type != 1) {
+                            HomeContainerView.this.smoothScrollToPosition(
+                                    router.position);
+                        }
                     }
                 });
 
@@ -201,7 +201,10 @@ public class HomeContainerView extends RecyclerView {
             rightView.setScaleY((1 - mScale) * percent + mScale);
         }
 
-
+        TabView.Router router = new TabView.Router();
+        router.position = mCurrentItemPos;
+        router.type = 1;
+        RxBus.getInstance().post(router);
 
         currentTopView = currentView;
     }

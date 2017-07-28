@@ -1,6 +1,7 @@
 package com.jarvis.videoplayer.view;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -52,8 +53,15 @@ public class TabView extends FrameLayout {
 
     private InnerLayoutManager mInnerLayoutManager;
     private InnerAdapter mInnerAdapter;
+    private View currentView;
 
     public List<Router> mRouters;
+
+    private EditTabBar mEditTabBar;
+
+    public interface EditTabBar {
+        void editTabBarCallback();
+    }
 
     public TabView(Context context) {
         super(context);
@@ -110,6 +118,19 @@ public class TabView extends FrameLayout {
         mRouters = new ArrayList<>();
         mInnerAdapter = new InnerAdapter(context, mRouters);
         tabRecyclerView.setAdapter(mInnerAdapter);
+
+        tabEditView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mEditTabBar != null) {
+                    mEditTabBar.editTabBarCallback();
+                }
+            }
+        });
+    }
+
+    public void registerEditCallBack(EditTabBar editTabBar) {
+        this.mEditTabBar = editTabBar;
     }
 
     @Override
@@ -122,11 +143,28 @@ public class TabView extends FrameLayout {
                     @Override
                     public void accept(@NonNull Object o) throws Exception {
                         Router router = (Router) o;
-                        mInnerLayoutManager.scrollToPositionWithOffset(
-                                router.position,
-                                (Utils.getScreenWidth(mContext) - tabItemWidth) / 2);
+                        if (router.type == 1) {
+                            tabRecyclerView.smoothScrollToPosition(
+                                    router.position);
+                            View targetChild = tabRecyclerView.getLayoutManager().findViewByPosition(router.position);
+                            if (targetChild != null) {
+                                changeCurrentStatus(targetChild);
+                                TextView targetChildTv = (TextView) currentView.findViewById(R.id.tab_title);
+                                targetChildTv.setTextColor(getResources().getColor(R.color.colorAccent));
+                            }
+                        }
                     }
                 });
+    }
+
+    private void changeCurrentStatus(View targetChild) {
+        if (currentView != null) {
+            TextView chrrentChildTv = (TextView) currentView.findViewById(R.id.tab_title);
+            if (chrrentChildTv != null) {
+                chrrentChildTv.setTextColor(Color.BLACK);
+            }
+        }
+        currentView = targetChild;
     }
 
     @Override
@@ -176,12 +214,15 @@ public class TabView extends FrameLayout {
         }
 
         @Override
-        public void onBindViewHolder(InnerViewHolder holder, final int position) {
+        public void onBindViewHolder(final InnerViewHolder holder, final int position) {
             holder.tabView.setText(mRouters.get(position).title);
+            holder.tabView.setTextColor(Color.BLACK);
             holder.itemView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     RxBus.getInstance().post(mRouters.get(position));
+                    changeCurrentStatus(holder.tabView);
+                    holder.tabView.setTextColor(getResources().getColor(R.color.colorAccent));
                 }
             });
         }
@@ -208,7 +249,7 @@ public class TabView extends FrameLayout {
     }
 
     public static class Router {
-        public int type;
+        public int type = 0;
         public int position;
         public String title;
     }

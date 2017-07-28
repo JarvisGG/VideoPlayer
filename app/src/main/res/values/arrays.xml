@@ -9,6 +9,9 @@
         <item>科技</item>
         <item>汽车</item>
         <item>体育</item>
+    </string-array>
+
+    <string-array name="home_total">
         <item>财经</item>
         <item>军事</item>
         <item>国际</item>
