@@ -1785,6 +1785,11 @@
     <color name="yejiantongyong1_pressed">#ff505050</color>
     <color name="yejiantongyong1_selected">#ff505050</color>
 
+    <color name="title_gray">#717171</color>
+    <color name="search_view_hint_color">#e3f2fd</color>
+    <color name="color_primary">#2196f3</color>
+    <color name="color_primary_dark">#1976d2</color>
+
     <color name="tip">#9c9c9c</color>
     <color name="bg_focus">#DDDDDD</color>
     <color name="red_500">#ef4836</color>

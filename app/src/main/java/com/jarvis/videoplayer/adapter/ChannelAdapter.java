@@ -35,31 +35,22 @@ import java.util.List;
 
 public class ChannelAdapter extends RecyclerView.Adapter implements OnItemMoveListener {
 
-    // 我的频道 标题部分
     public static final int TYPE_MY_CHANNEL_HEADER = 0;
-    // 我的频道
     public static final int TYPE_MY = 1;
-    // 其他频道 标题部分
     public static final int TYPE_OTHER_CHANNEL_HEADER = 2;
-    // 其他频道
     public static final int TYPE_OTHER = 3;
 
-    // 我的频道之前的header数量  该demo中 即标题部分 为 1
     private static final int COUNT_PRE_MY_HEADER = 1;
-    // 其他频道之前的header数量  该demo中 即标题部分 为 COUNT_PRE_MY_HEADER + 1
     private static final int COUNT_PRE_OTHER_HEADER = COUNT_PRE_MY_HEADER + 1;
 
     private static final long ANIM_TIME = 360L;
 
-    // touch 点击开始时间
     private long startTime;
-    // touch 间隔时间  用于分辨是否是 "点击"
     private static final long SPACE_TIME = 100;
 
     private LayoutInflater mInflater;
     private ItemTouchHelper mItemTouchHelper;
 
-    // 是否为 编辑 模式
     private boolean isEditMode;
 
     private List<ChannelEntity> mMyChannelItems, mOtherChannelItems;
@@ -120,15 +111,12 @@ public class ChannelAdapter extends RecyclerView.Adapter implements OnItemMoveLi
                             RecyclerView recyclerView = ((RecyclerView) parent);
                             View targetView = recyclerView.getLayoutManager().findViewByPosition(mMyChannelItems.size() + COUNT_PRE_OTHER_HEADER);
                             View currentView = recyclerView.getLayoutManager().findViewByPosition(position);
-                            // 如果targetView不在屏幕内,则indexOfChild为-1  此时不需要添加动画,因为此时notifyItemMoved自带一个向目标移动的动画
-                            // 如果在屏幕内,则添加一个位移动画
                             if (recyclerView.indexOfChild(targetView) >= 0) {
                                 int targetX, targetY;
 
                                 RecyclerView.LayoutManager manager = recyclerView.getLayoutManager();
                                 int spanCount = ((GridLayoutManager) manager).getSpanCount();
 
-                                // 移动后 高度将变化 (我的频道Grid 最后一个item在新的一行第一个)
                                 if ((mMyChannelItems.size() - COUNT_PRE_MY_HEADER) % spanCount == 0) {
                                     View preTargetView = recyclerView.getLayoutManager().findViewByPosition(mMyChannelItems.size() + COUNT_PRE_OTHER_HEADER - 1);
                                     targetX = preTargetView.getLeft();
@@ -209,13 +197,9 @@ public class ChannelAdapter extends RecyclerView.Adapter implements OnItemMoveLi
                         RecyclerView recyclerView = ((RecyclerView) parent);
                         RecyclerView.LayoutManager manager = recyclerView.getLayoutManager();
                         int currentPiosition = otherHolder.getAdapterPosition();
-                        // 如果RecyclerView滑动到底部,移动的目标位置的y轴 - height
                         View currentView = manager.findViewByPosition(currentPiosition);
-                        // 目标位置的前一个item  即当前MyChannel的最后一个
                         View preTargetView = manager.findViewByPosition(mMyChannelItems.size() - 1 + COUNT_PRE_MY_HEADER);
 
-                        // 如果targetView不在屏幕内,则为-1  此时不需要添加动画,因为此时notifyItemMoved自带一个向目标移动的动画
-                        // 如果在屏幕内,则添加一个位移动画
                         if (recyclerView.indexOfChild(preTargetView) >= 0) {
                             int targetX = preTargetView.getLeft();
                             int targetY = preTargetView.getTop();
@@ -224,7 +208,6 @@ public class ChannelAdapter extends RecyclerView.Adapter implements OnItemMoveLi
 
                             GridLayoutManager gridLayoutManager = ((GridLayoutManager) manager);
                             int spanCount = gridLayoutManager.getSpanCount();
-                            // target 在最后一行第一个
                             if ((targetPosition - COUNT_PRE_MY_HEADER) % spanCount == 0) {
                                 View targetView = manager.findViewByPosition(targetPosition);
                                 targetX = targetView.getLeft();
@@ -232,21 +215,15 @@ public class ChannelAdapter extends RecyclerView.Adapter implements OnItemMoveLi
                             } else {
                                 targetX += preTargetView.getWidth();
 
-                                // 最后一个item可见
                                 if (gridLayoutManager.findLastVisibleItemPosition() == getItemCount() - 1) {
-                                    // 最后的item在最后一行第一个位置
                                     if ((getItemCount() - 1 - mMyChannelItems.size() - COUNT_PRE_OTHER_HEADER) % spanCount == 0) {
-                                        // RecyclerView实际高度 > 屏幕高度 && RecyclerView实际高度 < 屏幕高度 + item.height
                                         int firstVisiblePostion = gridLayoutManager.findFirstVisibleItemPosition();
                                         if (firstVisiblePostion == 0) {
-                                            // FirstCompletelyVisibleItemPosition == 0 即 内容不满一屏幕 , targetY值不需要变化
-                                            // // FirstCompletelyVisibleItemPosition != 0 即 内容满一屏幕 并且 可滑动 , targetY值 + firstItem.getTop
                                             if (gridLayoutManager.findFirstCompletelyVisibleItemPosition() != 0) {
                                                 int offset = (-recyclerView.getChildAt(0).getTop()) - recyclerView.getPaddingTop();
                                                 targetY += offset;
                                             }
-                                        } else { // 在这种情况下 并且 RecyclerView高度变化时(即可见第一个item的 position != 0),
-                                            // 移动后, targetY值  + 一个item的高度
+                                        } else {
                                             targetY += preTargetView.getHeight();
                                         }
                                     }
@@ -255,12 +232,6 @@ public class ChannelAdapter extends RecyclerView.Adapter implements OnItemMoveLi
                                 }
                             }
 
-                            // 如果当前位置是otherChannel可见的最后一个
-                            // 并且 当前位置不在grid的第一个位置
-                            // 并且 目标位置不在grid的第一个位置
-
-                            // 则 需要延迟250秒 notifyItemMove , 这是因为这种情况 , 并不触发ItemAnimator , 会直接刷新界面
-                            // 导致我们的位移动画刚开始,就已经notify完毕,引起不同步问题
                             if (currentPiosition == gridLayoutManager.findLastVisibleItemPosition()
                                     && (currentPiosition - mMyChannelItems.size() - COUNT_PRE_OTHER_HEADER) % spanCount != 0
                                     && (targetPosition - COUNT_PRE_MY_HEADER) % spanCount != 0) {
@@ -309,7 +280,6 @@ public class ChannelAdapter extends RecyclerView.Adapter implements OnItemMoveLi
 
     @Override
     public int getItemCount() {
-        // 我的频道  标题 + 我的频道.size + 其他频道 标题 + 其他频道.size
         return mMyChannelItems.size() + mOtherChannelItems.size() + COUNT_PRE_OTHER_HEADER;
     }
 
@@ -415,12 +385,6 @@ public class ChannelAdapter extends RecyclerView.Adapter implements OnItemMoveLi
      * 添加需要移动的 镜像View
      */
     private ImageView addMirrorView(ViewGroup parent, RecyclerView recyclerView, View view) {
-        /**
-         * 我们要获取cache首先要通过setDrawingCacheEnable方法开启cache，然后再调用getDrawingCache方法就可以获得view的cache图片了。
-         buildDrawingCache方法可以不用调用，因为调用getDrawingCache方法时，若果cache没有建立，系统会自动调用buildDrawingCache方法生成cache。
-         若想更新cache, 必须要调用destoryDrawingCache方法把旧的cache销毁，才能建立新的。
-         当调用setDrawingCacheEnabled方法设置为false, 系统也会自动把原来的cache销毁。
-         */
         view.destroyDrawingCache();
         view.setDrawingCacheEnabled(true);
         final ImageView mirrorView = new ImageView(recyclerView.getContext());
@@ -491,7 +455,6 @@ public class ChannelAdapter extends RecyclerView.Adapter implements OnItemMoveLi
                 Animation.ABSOLUTE, targetX,
                 Animation.RELATIVE_TO_SELF, 0f,
                 Animation.ABSOLUTE, targetY);
-        // RecyclerView默认移动动画250ms 这里设置360ms 是为了防止在位移动画结束后 remove(view)过早 导致闪烁
         translateAnimation.setDuration(ANIM_TIME);
         translateAnimation.setFillAfter(true);
         return translateAnimation;

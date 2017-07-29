@@ -1,5 +1,7 @@
 package com.jarvis.videoplayer.model;
 
+import java.io.Serializable;
+
 /**
  * @author Jarvis
  * @version 1.0
@@ -10,7 +12,7 @@ package com.jarvis.videoplayer.model;
  * @changeRecord [修改记录] <br/>
  */
 
-public class VideoBean {
+public class VideoBean implements Serializable  {
     private String title;
     private String imageUrl;
     private String videoUrl;

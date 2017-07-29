@@ -68,7 +68,7 @@ public class VideoFragment extends Fragment {
             public void onChildViewDetachedFromWindow(View view) {
                 VideoPlayer videoPlayer = (VideoPlayer) view.findViewById(R.id.video_player);
                 if (videoPlayer != null) {
-//                    videoPlayer.release();
+                    videoPlayer.release();
                 }
             }
         });

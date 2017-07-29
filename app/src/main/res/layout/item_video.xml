@@ -17,4 +17,58 @@
 
     </com.jarvis.jarvisvideoplayer.VideoPlayer>
 
+    <LinearLayout
+        android:id="@+id/video_data"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        >
+
+        <ImageView
+            android:id="@+id/ivAvatar"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_margin="4dp"/>
+
+        <TextView
+            android:id="@+id/tvFrom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:gravity="center"
+            android:textColor="@color/yejianheise3"
+            android:text="世锋日上"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"/>
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_action_comment"
+            />
+
+        <TextView
+            android:id="@+id/tvCommentCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:textColor="@color/yejianheise3"
+            android:text="217"/>
+
+        <ImageView
+            android:id="@+id/ivMore"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/more_video_selector"
+            />
+
+    </LinearLayout>
+
 </LinearLayout>

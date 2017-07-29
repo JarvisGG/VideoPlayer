@@ -14,6 +14,7 @@ import com.jarvis.videoplayer.R;
 import com.jarvis.videoplayer.adapter.HomeAdapter;
 import com.jarvis.videoplayer.fragment.BaseFragment;
 import com.jarvis.videoplayer.fragment.HomeFragment;
+import com.jarvis.videoplayer.fragment.NewFragment;
 import com.jarvis.videoplayer.fragment.VideoFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         adapter = new HomeAdapter(getSupportFragmentManager());
         adapter.addFragment(HomeFragment.newInstance("home"));
         adapter.addFragment(VideoFragment.newInstance("video"));
-        adapter.addFragment(BaseFragment.newInstance("user"));
+        adapter.addFragment(NewFragment.newInstance("news"));
 
         mViewPager.setAdapter(adapter);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

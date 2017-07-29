@@ -43,4 +43,110 @@
         <item name="android:windowExitAnimation">@anim/dialog_bottom_slide_out</item>
     </style>
 
+    <style name="cardRelativeLayoutStyle" parent="baseLayoutParam">
+        <item name="android:layout_margin">5dp</item>
+    </style>
+
+    <style name="cardImageViewStyle">
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_height">95dp</item>
+        <item name="android:layout_width">95dp</item>
+    </style>
+
+    <style name="baseCardTextStyle" parent="baseLayoutParam">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_toLeftOf">@id/card_share_overflow</item>
+        <item name="android:layout_toRightOf">@id/thumbnail_image</item>
+        <item name="android:layout_below">@id/question_title</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingRight">15dp</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textIsSelectable">false</item>
+    </style>
+
+    <style name="cardQuestionTitleStyle" parent="baseCardTextStyle">
+        <item name="android:textSize">17sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="cardOverflowIconStyle">
+        <item name="android:layout_width">24dp</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="android:src">@drawable/ic_card_overflow</item>
+        <item name="android:layout_alignParentRight">true</item>
+    </style>
+
+    <style name="baseLayoutParam">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="toolbarStyle" parent="baseLayoutParam">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:minHeight">?attr/actionBarSize</item>"
+    </style>
+
+    <style name="cardStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="toolbar_action">
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:layout_weight">0.0</item>
+    </style>
+
+    <style name="commonListViewStyle" parent="baseLayoutParam">
+        <item name="android:drawSelectorOnTop">false</item>
+    </style>
+
+    <style name="tabLayoutStyle" parent="Widget.Design.TabLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark</item>
+        <item name="tabBackground">?attr/colorPrimary</item>
+        <item name="tabIndicatorColor">@android:color/white</item>
+        <item name="tabMode">scrollable</item>
+    </style>
+
+    <style name="mainPagerStyle" parent="baseLayoutParam">
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="toolbar_action_comment">
+        <item name="android:textSize">8.0sp</item>
+        <item name="android:textColor">@color/action_comment_text</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:background">@drawable/main_tab_badge_bg</item>
+        <item name="android:paddingLeft">3.0dip</item>
+        <item name="android:paddingRight">3.0dip</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">5.0dip</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="title_bar_style">
+        <item name="android:background">@drawable/bg_titlebar</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">@dimen/title_bar_height</item>
+    </style>
+
+    <style name="topic_title_back_image">
+        <item name="android:paddingLeft">10.0dip</item>
+        <item name="android:paddingRight">8.0dip</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:src">@drawable/leftbackicon_titlebar</item>
+    </style>
+
 </resources>
