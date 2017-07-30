@@ -8,10 +8,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
 
+import com.jarvis.model.Constants;
 import com.jarvis.videoplayer.R;
 import com.jarvis.videoplayer.fragment.NewFragment;
 import com.jarvis.videoplayer.fragment.NewsListFragment;
-import com.jarvis.videoplayer.http.Constants;
 
 import java.text.DateFormat;
 import java.util.Calendar;

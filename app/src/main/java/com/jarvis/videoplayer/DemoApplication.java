@@ -2,8 +2,6 @@ package com.jarvis.videoplayer;
 
 import android.app.Application;
 
-import com.jarvis.videoplayer.http.ApiImpl;
-
 /**
  * @author Jarvis
  * @version 1.0
@@ -18,6 +16,6 @@ public class DemoApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        ApiImpl.getInstance(this);
+//        ApiImpl.getInstance(this);
     }
 }

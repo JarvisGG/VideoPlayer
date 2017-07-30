@@ -6,27 +6,23 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.jarvis.model.Constants;
+import com.jarvis.model.DailyNews;
+import com.jarvis.model.NewsListFromZhihuObservable;
 import com.jarvis.videoplayer.R;
 import com.jarvis.videoplayer.adapter.NewsItemAdapter;
-import com.jarvis.videoplayer.http.Api;
-import com.jarvis.videoplayer.http.ApiImpl;
-import com.jarvis.videoplayer.http.Constants;
-import com.jarvis.videoplayer.model.DailyNews;
-import com.jarvis.videoplayer.rx.RxSchedulers;
+import com.jarvis.videoplayer.view.CommitRecyclerView;
 
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import io.reactivex.FlowableSubscriber;
-import io.reactivex.subscribers.ResourceSubscriber;
 
 /**
  * @author Jarvis
@@ -46,13 +42,11 @@ public class NewsListFragment extends Fragment implements SwipeRefreshLayout.OnR
     private boolean isRefreshed = false;
     private List<DailyNews> mNewsList = new ArrayList<>();
 
-    private RecyclerView mRecyclerView;
+    private CommitRecyclerView mRecyclerView;
     private NewsItemAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
 
     private SwipeRefreshLayout mRefreshLayout;
-
-    private ApiImpl mRestApiImpl;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,7 +59,6 @@ public class NewsListFragment extends Fragment implements SwipeRefreshLayout.OnR
             setRetainInstance(true);
         }
 
-        mRestApiImpl = ApiImpl.getInstance(getActivity());
     }
 
     @Nullable
@@ -77,7 +70,7 @@ public class NewsListFragment extends Fragment implements SwipeRefreshLayout.OnR
     }
 
     private void initView(View containerView) {
-        mRecyclerView = (RecyclerView) containerView.findViewById(R.id.news_list);
+        mRecyclerView = (CommitRecyclerView) containerView.findViewById(R.id.news_list);
         mRefreshLayout = (SwipeRefreshLayout) containerView.findViewById(R.id.swipe_refresh_layout);
 
         mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
@@ -95,40 +88,21 @@ public class NewsListFragment extends Fragment implements SwipeRefreshLayout.OnR
         onRefresh();
     }
 
-    private Subscriber<Object> onNextSubscriber = new Subscriber<Object>() {
-
-        @Override
-        public void onSubscribe(Subscription s) {
-
-        }
-
-        @Override
-        public void onNext(Object o) {
-            if (o instanceof List) {
-                mNewsList = (List<DailyNews>) o;
-            }
-        }
-
-        @Override
-        public void onError(Throwable t) {
-
-        }
-
-        @Override
-        public void onComplete() {
-            isRefreshed = true;
-
-            mRefreshLayout.setRefreshing(false);
-            mAdapter.updateNewsList(mNewsList);
-
-        }
-    };
-
     @Override
     public void onRefresh() {
-        mRestApiImpl.getNews(mDate)
-                .compose(RxSchedulers.threadSwitchSchedulers())
-                .subscribe(onNextSubscriber);
+
+        NewsListFromZhihuObservable.ofDate(mDate)
+                .subscribeOn(rx.schedulers.Schedulers.io())
+                .observeOn(rx.android.schedulers.AndroidSchedulers.mainThread())
+                .subscribe(dailyNewses -> {
+                    this.mNewsList = dailyNewses;
+                    isRefreshed = true;
+                    mRefreshLayout.setRefreshing(false);
+                    mAdapter.updateNewsList(dailyNewses);
+                    mRecyclerView.scheduleLayoutAnimation();
+                });
+
+
         if (mRefreshLayout != null) {
             mRefreshLayout.setRefreshing(true);
         }

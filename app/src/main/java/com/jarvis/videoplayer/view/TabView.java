@@ -21,16 +21,12 @@ import com.jarvis.videoplayer.R;
 import com.jarvis.videoplayer.rx.RxBus;
 import com.jarvis.videoplayer.rx.RxSchedulers;
 
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Flowable;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
+import rx.Subscriber;
+import rx.Subscription;
 
 /**
  * @author Jarvis
@@ -49,7 +45,7 @@ public class TabView extends FrameLayout {
 
     private RecyclerView tabRecyclerView;
     private ImageView tabEditView;
-    private Disposable mDisposable;
+    private Subscription mDisposable;
 
     private InnerLayoutManager mInnerLayoutManager;
     private InnerAdapter mInnerAdapter;
@@ -139,10 +135,19 @@ public class TabView extends FrameLayout {
         mDisposable = RxBus.getInstance()
                 .toObserverable(Router.class)
                 .compose(RxSchedulers.threadSwitchSchedulers())
-                .subscribe(new Consumer<Object>() {
+                .subscribe(new Subscriber<Router>() {
                     @Override
-                    public void accept(@NonNull Object o) throws Exception {
-                        Router router = (Router) o;
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(Router router) {
                         if (router.type == 1) {
                             tabRecyclerView.smoothScrollToPosition(
                                     router.position);
@@ -154,6 +159,7 @@ public class TabView extends FrameLayout {
                             }
                         }
                     }
+
                 });
     }
 
@@ -170,7 +176,7 @@ public class TabView extends FrameLayout {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        mDisposable.dispose();
+        mDisposable.unsubscribe();
     }
 
     public void notifyTabData(List<Router> routers) {

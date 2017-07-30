@@ -1,6 +1,4 @@
-package com.jarvis.videoplayer.model;
-
-import com.jarvis.videoplayer.http.Constants;
+package com.jarvis.model;
 
 public class Question {
     private String title;

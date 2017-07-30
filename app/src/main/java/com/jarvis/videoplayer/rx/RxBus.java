@@ -1,9 +1,9 @@
 package com.jarvis.videoplayer.rx;
 
-import io.reactivex.Flowable;
-import io.reactivex.processors.FlowableProcessor;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.subscribers.SerializedSubscriber;
+import rx.Observable;
+import rx.subjects.PublishSubject;
+import rx.subjects.SerializedSubject;
+import rx.subjects.Subject;
 
 /**
  * @author Jarvis
@@ -17,10 +17,10 @@ import io.reactivex.subscribers.SerializedSubscriber;
 
 public class RxBus {
     private static volatile RxBus mInstance;
-    private final FlowableProcessor<Object> mBus;
+    private final Subject mBus;
 
     public RxBus() {
-        mBus = PublishProcessor.create().toSerialized();
+        mBus = new SerializedSubject<>(PublishSubject.create());
     }
 
     public static RxBus getInstance() {
@@ -35,10 +35,10 @@ public class RxBus {
     }
 
     public void post(Object object) {
-        new SerializedSubscriber<>(mBus).onNext(object);
+        mBus.onNext(object);
     }
 
-    public <T> Flowable<T> toObserverable(Class<T> eventType) {
+    public <T> Observable<T> toObserverable(Class<T> eventType) {
         return mBus.ofType(eventType);
 //        return mBus.filter(eventType::isInstance)
 //                .cast(eventType);

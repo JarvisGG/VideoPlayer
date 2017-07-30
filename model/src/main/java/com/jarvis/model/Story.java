@@ -1,4 +1,4 @@
-package com.jarvis.videoplayer.model;
+package com.jarvis.model;
 
 public class Story {
     private int storyId;

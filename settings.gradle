@@ -1,1 +1,1 @@
-include ':app', ':libs.videoplayer'
+include ':app', ':libs.videoplayer', ':model'

@@ -14,9 +14,8 @@ import com.jarvis.videoplayer.helper.HomeLinearSnapHelper;
 import com.jarvis.videoplayer.rx.RxBus;
 import com.jarvis.videoplayer.rx.RxSchedulers;
 
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
+import rx.Subscriber;
+import rx.Subscription;
 
 /**
  * @author Jarvis
@@ -48,7 +47,7 @@ public class HomeContainerView extends RecyclerView {
     private int mCurrentItemOffset;
 
     private View currentTopView;
-    private Disposable mDisposable;
+    private Subscription mDisposable;
 
     public HomeContainerView(Context context) {
         super(context);
@@ -119,10 +118,19 @@ public class HomeContainerView extends RecyclerView {
         mDisposable = RxBus.getInstance()
                 .toObserverable(TabView.Router.class)
                 .compose(RxSchedulers.threadSwitchSchedulers())
-                .subscribe(new Consumer<Object>() {
+                .subscribe(new Subscriber<TabView.Router>() {
                     @Override
-                    public void accept(@NonNull Object o) throws Exception {
-                        TabView.Router router = (TabView.Router) o;
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(TabView.Router router) {
                         if (router.type != 1) {
                             HomeContainerView.this.smoothScrollToPosition(
                                     router.position);
@@ -135,7 +143,7 @@ public class HomeContainerView extends RecyclerView {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        mDisposable.dispose();
+        mDisposable.unsubscribe();
     }
 
     @Override

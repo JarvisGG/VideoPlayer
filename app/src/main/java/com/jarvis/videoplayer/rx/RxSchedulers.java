@@ -1,15 +1,8 @@
 package com.jarvis.videoplayer.rx;
 
-import org.reactivestreams.Publisher;
-
-import io.reactivex.Flowable;
-import io.reactivex.FlowableTransformer;
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.ObservableTransformer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.schedulers.Schedulers;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * @author Jarvis
@@ -22,13 +15,9 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class RxSchedulers {
-    public static <T> FlowableTransformer<T, T> threadSwitchSchedulers() {
-        return new FlowableTransformer<T, T>() {
-            @Override
-            public Publisher<T> apply(@NonNull Flowable<T> upstream) {
-                return upstream.subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread());
-            }
-        };
+    public static <T> Observable.Transformer<T, T> threadSwitchSchedulers() {
+        return observable -> observable
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 }

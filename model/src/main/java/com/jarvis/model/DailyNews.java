@@ -1,4 +1,4 @@
-package com.jarvis.videoplayer.model;
+package com.jarvis.model;
 
 import java.util.List;
 

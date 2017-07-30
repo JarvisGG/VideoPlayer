@@ -9,10 +9,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.jarvis.model.Constants;
+import com.jarvis.model.DailyNews;
 import com.jarvis.videoplayer.R;
 import com.jarvis.videoplayer.fragment.NewsListFragment;
-import com.jarvis.videoplayer.http.Constants;
-import com.jarvis.videoplayer.model.DailyNews;
 
 import java.util.List;
 
