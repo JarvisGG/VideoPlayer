@@ -1,11 +1,13 @@
 package com.jarvis.videoplayer.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.jarvis.videoplayer.R;
 import com.jarvis.videoplayer.utils.CardAdapterHelper;
 
@@ -23,11 +25,13 @@ import java.util.List;
  */
 
 public class HomeContainerAdapter extends RecyclerView.Adapter<HomeContainerAdapter.ViewHolder> {
-    private List<Integer> mList = new ArrayList<>();
+    private Context mContext;
+    private List<String> mList = new ArrayList<>();
     private CardAdapterHelper mCardAdapterHelper = new CardAdapterHelper();
 
-    public HomeContainerAdapter(List<Integer> mList) {
+    public HomeContainerAdapter(Context context, List<String> mList) {
         this.mList = mList;
+        this.mContext = context;
     }
 
     @Override
@@ -40,7 +44,9 @@ public class HomeContainerAdapter extends RecyclerView.Adapter<HomeContainerAdap
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         mCardAdapterHelper.onBindViewHolder(holder.itemView, position, getItemCount());
-        holder.mImageView.setImageResource(mList.get(position));
+        Glide.with(mContext)
+                .load(mList.get(position))
+                .into(holder.mImageView);
         holder.mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

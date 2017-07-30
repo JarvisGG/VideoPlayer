@@ -70,14 +70,14 @@ public class HomeFragment extends Fragment implements TabView.EditTabBar {
         }
         mTabView.notifyTabData(tabList);
 
-        List<Integer> mList = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            mList.add(R.drawable.pic4);
-            mList.add(R.drawable.pic5);
-            mList.add(R.drawable.pic6);
-        }
+        List<String> mList = new ArrayList<>();
+        mList.add("https://img3.doubanio.com/view/photo/photo/public/p1811862846.webp");
+        mList.add("https://img1.doubanio.com/view/photo/photo/public/p2296831438.webp");
+        mList.add("https://img3.doubanio.com/view/photo/photo/public/p2226760744.webp");
+        mList.add("https://img1.doubanio.com/view/photo/photo/public/p2226761129.webp");
+
         mHomeContainerView.setCurrentItemPos(2);
-        mHomeContainerAdapter = new HomeContainerAdapter(mList);
+        mHomeContainerAdapter = new HomeContainerAdapter(getContext(), mList);
         mLinearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         mHomeContainerView.setLayoutManager(mLinearLayoutManager);
         mHomeContainerView.setAdapter(mHomeContainerAdapter);

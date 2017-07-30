@@ -37,9 +37,9 @@ public class MainActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.viewpager_container_view);
 
         adapter = new HomeAdapter(getSupportFragmentManager());
-        adapter.addFragment(BaseFragment.newInstance("home"));
-        adapter.addFragment(NewFragment.newInstance("news"));
         adapter.addFragment(VideoFragment.newInstance("video"));
+        adapter.addFragment(NewFragment.newInstance("news"));
+        adapter.addFragment(HomeFragment.newInstance("home"));
 
         mViewPager.setAdapter(adapter);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

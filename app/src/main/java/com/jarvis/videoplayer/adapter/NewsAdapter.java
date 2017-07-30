@@ -65,7 +65,6 @@ public class NewsAdapter extends FragmentStatePagerAdapter {
         Calendar displayDate = Calendar.getInstance();
         displayDate.add(Calendar.DAY_OF_YEAR, -position);
 
-        return (position == 0 ? mContext.getString(R.string.zhihu_daily_today) + " " : "")
-                + DateFormat.getDateInstance().format(displayDate.getTime());
+        return DateFormat.getDateInstance().format(displayDate.getTime());
     }
 }

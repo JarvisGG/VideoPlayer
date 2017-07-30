@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ public class NewFragment extends Fragment {
 
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
+    private Toolbar mToolbar;
     private NewsAdapter mAdapter;
 
     public static NewFragment newInstance(String info) {
@@ -45,11 +47,14 @@ public class NewFragment extends Fragment {
     private void initView(View containerView) {
         mTabLayout = (TabLayout) containerView.findViewById(R.id.main_pager_tabs);
         mViewPager = (ViewPager) containerView.findViewById(R.id.main_pager);
+        mToolbar= (Toolbar) containerView.findViewById(R.id.toolbar);
 
         mViewPager.setOffscreenPageLimit(PAGE_COUNT);
         mAdapter = new NewsAdapter(getActivity(), getActivity().getSupportFragmentManager());
         mViewPager.setAdapter(mAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
+
+        mToolbar.setTitle("新闻～");
 
     }
 }
